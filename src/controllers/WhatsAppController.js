@@ -207,18 +207,59 @@ class WhatsAppController {
     this.el.btnAttachContact.on("click", (e) => {
       this.el.modalContacts.show();
     });
+    //==================Contact====================
+
+    //================MicroPhone===================
+
+    this.el.btnSendMicrophone.on("click", (e) => {
+      this.el.recordMicrophone.show();
+      this.el.btnSendMicrophone.hide();
+      this.startRecordMicrophoneTime();
+    });
+
+    //cancelar microphone
+    this.el.btnCancelMicrophone.on("click", (e) => {
+      this.closeRecordMicrophone();
+    });
+
+    //finalizar microphone
+    this.el.btnFinishMicrophone.on("click", (e) => {
+      this.closeRecordMicrophone();
+    });
+
+    //================MicroPhone===================
   }
+
+  //metodo para iniciar microphone
+  startRecordMicrophoneTime() {
+    let start = Date.now();
+
+    this._recordMicrophoneInterval = setInterval(() => {
+      this.el.recordMicrophoneTimer.innerHTML = Date.now() - start;
+    }, 100);
+  }
+
+  //metodo para fechar microphone
+  closeRecordMicrophone() {
+    this.el.recordMicrophone.hide();
+    this.el.btnSendMicrophone.show();
+    clearInterval(this._recordMicrophoneInterval);
+  }
+
+  //metodo para fechar painel
   closeAllMainPanel() {
     this.el.panelMessagesContainer.hide();
     this.el.panelDocumentPreview.removeClass("open");
     this.el.panelCamera.removeClass("open");
   }
 
+  //metodo para fechar menu
   closeMenuAttach(e) {
     document.removeEventListener("click", this.closeMenuAttach);
     this.el.menuAttach.removeClass("open");
   }
 
+  //medoto para fecha painel esquerdo
   closeAllLeftPanel() {
     this.el.panelAddContact.hide();
     this.el.panelEditProfile.hide();

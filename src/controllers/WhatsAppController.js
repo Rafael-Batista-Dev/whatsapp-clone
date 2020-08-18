@@ -1,4 +1,7 @@
-class WhatsAppController {
+import { Format } from "./../util/Fomat";
+import { CameraController } from "./CameraController";
+
+export class WhatsAppController {
   constructor() {
     console.log("hello world");
 

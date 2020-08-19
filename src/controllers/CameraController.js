@@ -3,21 +3,12 @@ export class CameraController {
     this._videoEl = videoEl;
 
     navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-      })
+      .getUserMedia({ video: true })
       .then((stream) => {
-        /*  
-        this._videoEl.srcObject = stream;
-        this._videoEl.play();  
-
-        ===================================================
-
-        this._videoEl.srcObject = URL.createObjectURL(stream);
-        */
-
         this._stream = stream;
+
         this._videoEl.srcObject = new MediaStream(stream);
+
         this._videoEl.play();
       })
       .catch((err) => {

@@ -1,5 +1,6 @@
 import { Format } from "./../util/Fomat";
 import { CameraController } from "./CameraController";
+import { MicrophoneController } from "./MicrophoneController";
 import { DocumentPreviewController } from "./DocumentPreviewController";
 
 export class WhatsAppController {
@@ -307,15 +308,19 @@ export class WhatsAppController {
       this.el.recordMicrophone.show();
       this.el.btnSendMicrophone.hide();
       this.startRecordMicrophoneTime();
+
+      this._microphoneController = new MicrophoneController();
     });
 
     //cancelar microphone
     this.el.btnCancelMicrophone.on("click", (e) => {
+      this._microphoneController.stop();
       this.closeRecordMicrophone();
     });
 
     //finalizar microphone
     this.el.btnFinishMicrophone.on("click", (e) => {
+      this._microphoneController.stop();
       this.closeRecordMicrophone();
     });
     //================MicroPhone===================

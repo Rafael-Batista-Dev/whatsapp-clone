@@ -311,20 +311,22 @@ export class WhatsAppController {
 
       this._microphoneController = new MicrophoneController();
 
-      this._microphoneController.on("play", (audio) => {
-        console.log("Recebi o evento play", audio);
+      this._microphoneController.on("ready", (audio) => {
+        console.log("ready event");
+
+        this._microphoneController.startRecorder();
       });
     });
 
     //cancelar microphone
     this.el.btnCancelMicrophone.on("click", (e) => {
-      this._microphoneController.stop();
+      this._microphoneController.stopRecorder();
       this.closeRecordMicrophone();
     });
 
     //finalizar microphone
     this.el.btnFinishMicrophone.on("click", (e) => {
-      this._microphoneController.stop();
+      this._microphoneController.stopRecorder();
       this.closeRecordMicrophone();
     });
     //================MicroPhone===================

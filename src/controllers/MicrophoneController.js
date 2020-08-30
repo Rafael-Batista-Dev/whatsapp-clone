@@ -1,5 +1,9 @@
-export class MicrophoneController {
+import { ClassEvent } from "../util/ClassEvent";
+
+export class MicrophoneController extends ClassEvent {
   constructor() {
+    super();
+
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
@@ -9,6 +13,8 @@ export class MicrophoneController {
         audio.srcObject = new MediaStream(stream);
 
         audio.play();
+
+        this.trigger("play", audio);
       })
       .catch((err) => {
         console.error(err);

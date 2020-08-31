@@ -169,6 +169,14 @@ export class WhatsAppController {
 
     //button de savar nome
     this.el.btnSavePanelEditProfile.on("click", (e) => {
+      //
+      this.el.btnSavePanelEditProfile.disabled = true;
+      this._user.name = this.el.inputNamePanelEditProfile.innerHTML;
+
+      this._user.save().then(() => {
+        this.el.btnSavePanelEditProfile.disabled = false;
+      });
+
       console.log(this.el.inputNamePanelEditProfile.innerHTML);
     });
 

@@ -58,7 +58,7 @@ export class User extends Model {
 
   addContact(contact) {
     //Error no addContact
-    return getContactsRef(this.email)
+    return User.getContactsRef(this.email)
       .doc(btoa(contact.email))
       .set(contact.toJSON());
   }

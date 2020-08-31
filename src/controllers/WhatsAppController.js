@@ -282,8 +282,8 @@ export class WhatsAppController {
       contact.on("dataChange", (data) => {
         if (data.name) {
           this._user.addContact(contact).then(() => {
-            console.log("Contato foi add");
             this.el.btnClosePanelAddContact.click();
+            console.log("Contato foi add");
           });
         } else {
           console.error("Usuário não foi encontrado");

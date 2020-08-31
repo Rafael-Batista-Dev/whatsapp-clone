@@ -17,13 +17,13 @@ export class Firebase {
   }
 
   init() {
-    if (!this._initialize) {
+    if (!window._initializeFirebase) {
       // Initialize Firebase
       firebase.initializeApp(this._firebaseConfig);
 
       firebase.firestore().settings({});
 
-      this._initialize = true;
+      window._initializeFirebase = true;
     }
   }
 

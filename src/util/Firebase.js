@@ -8,7 +8,7 @@ export class Firebase {
       authDomain: "whatsapp-e4012.firebaseapp.com",
       databaseURL: "https://whatsapp-e4012.firebaseio.com",
       projectId: "whatsapp-e4012",
-      storageBucket: "whatsapp-e4012.appspot.com",
+      storageBucket: "gs://whatsapp-e4012.appspot.com",
       messagingSenderId: "185857447649",
       appId: "1:185857447649:web:05c294f6359818428909a0",
     };

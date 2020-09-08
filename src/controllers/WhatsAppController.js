@@ -268,6 +268,16 @@ export class WhatsAppController {
   }
 
   initEvent() {
+    this.el.inputSearchContacts.on("keyup", (e) => {
+      if (this.el.inputSearchContacts.value.length > 0) {
+        this.el.inputSearchPlaceholder.hide();
+      } else {
+        this.el.inputSearchPlaceholder.show();
+      }
+
+      this._user.getContacts(this.el.inputSearchContacts.value);
+    });
+
     //Menu foto
     this.el.myPhoto.on("click", (e) => {
       this.closeAllLeftPanel();

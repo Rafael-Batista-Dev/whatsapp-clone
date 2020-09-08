@@ -70,21 +70,23 @@ export class User extends Model {
       .set(contact.toJSON());
   }
 
-  getContacts() {
+  getContacts(filter = "") {
     return new Promise((s, f) => {
-      User.getContactsRef(this.email).onSnapshot((docs) => {
-        let contacts = [];
+      User.getContactsRef(this.email)
+        .where("name", ">=", filter)
+        .onSnapshot((docs) => {
+          let contacts = [];
 
-        docs.forEach((doc) => {
-          let data = doc.data();
-          data.id = doc.id;
-          contacts.push(data);
+          docs.forEach((doc) => {
+            let data = doc.data();
+            data.id = doc.id;
+            contacts.push(data);
+          });
+
+          this.trigger("contactsChange", docs);
+
+          s(contacts);
         });
-
-        this.trigger("contactsChange", docs);
-
-        s(contacts);
-      });
     });
   }
 }

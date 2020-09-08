@@ -40,7 +40,7 @@ export class User extends Model {
   getById(id) {
     return new Promise((s, f) => {
       User.findByEmail(id).onSnapshot((doc) => {
-        this.formJSON(doc.data());
+        this.fromJSON(doc.data());
 
         s(doc);
       });

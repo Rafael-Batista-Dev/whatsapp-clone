@@ -7,7 +7,7 @@ export class Model extends ClassEvent {
     this._data = {};
   }
 
-  formJSON(json) {
+  fromJSON(json) {
     this._data = Object.assign(this._data, json);
 
     this.trigger("dataChange", this.toJSON());

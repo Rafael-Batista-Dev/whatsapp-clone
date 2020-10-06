@@ -205,13 +205,17 @@ export class Message extends Model {
         <div class="_3_7SH _1ZPgd">
         <div class="_1fnMt _2CORf">
             <a class="_1vKRe" href="#">
-                <div class="_2jTyA" style="background-image: url()"></div>
+                <div class="_2jTyA" style="background-image: url(${
+                  this.preview
+                })"></div>
                 <div class="_12xX7">
                     <div class="_3eW69">
                         <div class="JdzFp message-file-icon icon-doc-pdf"></div>
                     </div>
                     <div class="nxILt">
-                        <span dir="auto" class="message-filename">Arquivo.pdf</span>
+                        <span dir="auto" class="message-filename">${
+                          this.filename
+                        }</span>
                     </div>
                     <div class="_17viz">
                         <span data-icon="audio-download" class="message-file-download">
@@ -229,9 +233,9 @@ export class Message extends Model {
                 </div>
             </a>
             <div class="_3cMIj">
-                <span class="PyPig message-file-info">32 páginas</span>
-                <span class="PyPig message-file-type">PDF</span>
-                <span class="PyPig message-file-size">4 MB</span>
+                <span class="PyPig message-file-info">${this.info}</span>
+                <span class="PyPig message-file-type">${this.fileType}</span>
+                <span class="PyPig message-file-size">${this.size}</span>
             </div>
             <div class="_3Lj_s">
                 <div class="_1DZAH" role="button">
@@ -368,8 +372,10 @@ export class Message extends Model {
     return div;
   }
 
-  static sendImage(chatId, from, file) {
+  static upload(file, from) {
+    //
     return new Promise((s, f) => {
+      //
       let uploadTask = Firebase.hd()
         .ref(from)
         .child(Date.now() + "_" + file.name)
@@ -381,16 +387,65 @@ export class Message extends Model {
           // console.info('upload', e);
         },
         (err) => {
-          console.error(err);
+          f(err);
         },
         () => {
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            Message.send(chatId, from, "image", downloadURL).then(() => {
-              s();
-            });
-          });
+          s(uploadTask.snapshot);
         }
       );
+    });
+  }
+
+  static sendDocument(chatId, from, documentFile, imageFile, pdfInfo) {
+    return Message.send(chatId, from, "document", "", false).then((msgRef) => {
+      Message.upload(from, documentFile).then((snapshot) => {
+        let fileDocumentDownload = snapshot.downloadURL;
+
+        if (imageFile) {
+          Message.upload(from, imageFile).then((snapshot) => {
+            let fileImageDownload = snapshot.downloadURL;
+
+            msgRef.set(
+              {
+                content: fileDocumentDownload,
+                preview: fileImageDownload,
+                filename: documentFile.name,
+                size: documentFile.size,
+                info: pdfInfo,
+                fileType: documentFile.type,
+                status: "sent",
+              },
+              {
+                merge: true,
+              }
+            );
+          });
+        } else {
+          msgRef.set(
+            {
+              content: fileDocumentDownload,
+              filename: documentFile.name,
+              size: documentFile.size,
+              fileType: documentFile.type,
+              status: "sent",
+            },
+            {
+              merge: true,
+            }
+          );
+        }
+      });
+    });
+  }
+
+  static sendImage(chatId, from, file) {
+    return new Promise((s, f) => {
+      //
+      Message.upload(file, from).then((snapshot) => {
+        Message.send(chatId, from, "image", snapshot.downloadURL).then(() => {
+          s();
+        });
+      });
     });
   }
   static send(chatId, from, type, content) {
@@ -404,7 +459,9 @@ export class Message extends Model {
           from,
         })
         .then((result) => {
-          result.parent.doc(result.id).set(
+          let docRef = result.parent.doc(result.id);
+
+          docRef.set(
             {
               status: "sent",
             },
@@ -412,7 +469,7 @@ export class Message extends Model {
           );
         })
         .then(() => {
-          s();
+          s(docRef);
         });
     });
   }

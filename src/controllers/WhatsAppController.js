@@ -6,6 +6,7 @@ import { User } from "./../model/User";
 import { Firebase } from "./../util/Firebase";
 import { Chat } from "./../model/Chat";
 import { Message } from "./../model/Message";
+import { Base64 } from "./../util/Base64";
 
 export class WhatsAppController {
   constructor() {
@@ -478,8 +479,6 @@ export class WhatsAppController {
               file
             );
 
-            this.el.btnSendPicture.disabled = false;
-
             this.closeAllMainPanel();
             this._camera.stop();
             this.el.btnReshootPanelCamera.hide();
@@ -583,7 +582,32 @@ export class WhatsAppController {
     });
 
     this.el.btnSendDocument.on("click", (e) => {
-      console.log("Send Document");
+      //console.log("Send Document");
+
+      let file = this.el.inputDocument.files[0];
+      let base64 = this.el.imagePanelDocumentPreview.src;
+
+      if (file.type === "application/pdf") {
+        //
+        Base64.toFile(base64).then((filePreview) => {
+          //
+          Message.sendDocument(
+            this._contactActive.chatId,
+            this._user.email,
+            file,
+            filePreview,
+            this.el.infoPanelDocumentPreview.innerHTML
+          );
+        });
+      } else {
+        Message.sendDocument(
+          this._contactActive.chatId,
+          this._user.email,
+          file
+        );
+      }
+
+      this.el.btnClosePanelDocumentPreview.click();
     });
 
     //==================Document===================

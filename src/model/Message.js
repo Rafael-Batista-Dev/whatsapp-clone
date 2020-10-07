@@ -372,10 +372,8 @@ export class Message extends Model {
     return div;
   }
 
-  static upload(file, from) {
-    //
+  static upload(from, file) {
     return new Promise((s, f) => {
-      //
       let uploadTask = Firebase.hd()
         .ref(from)
         .child(Date.now() + "_" + file.name)
@@ -383,13 +381,13 @@ export class Message extends Model {
 
       uploadTask.on(
         "state_changed",
-        (e) => {
-          // console.info('upload', e);
+        (snapshot) => {
+          console.log("upload", snapshot);
         },
         (err) => {
           f(err);
         },
-        () => {
+        (success) => {
           s(uploadTask.snapshot);
         }
       );
@@ -461,15 +459,18 @@ export class Message extends Model {
         .then((result) => {
           let docRef = result.parent.doc(result.id);
 
-          docRef.set(
-            {
-              status: "sent",
-            },
-            { merge: true }
-          );
-        })
-        .then(() => {
-          s(docRef);
+          docRef
+            .set(
+              {
+                status: "sent",
+              },
+              {
+                merge: true,
+              }
+            )
+            .then(() => {
+              s(docRef);
+            });
         });
     });
   }

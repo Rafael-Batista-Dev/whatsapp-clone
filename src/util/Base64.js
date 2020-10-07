@@ -14,8 +14,8 @@ export class Base64 {
       .then((res) => {
         return res.arrayBuffer();
       })
-      .then((buf) => {
-        return new File([buf], filename, { type: mimeType });
+      .then((buffer) => {
+        return new File([buffer], filename, { type: mimeType });
       });
   }
 }

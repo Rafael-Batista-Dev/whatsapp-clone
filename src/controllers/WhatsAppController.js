@@ -585,7 +585,7 @@ export class WhatsAppController {
       //console.log("Send Document");
 
       let file = this.el.inputDocument.files[0];
-      let base64 = this.el.imagePanelDocumentPreview.src;
+      let base64 = this.el.imgPanelDocumentPreview.src;
 
       if (file.type === "application/pdf") {
         //
